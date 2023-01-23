@@ -23,6 +23,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('get-count-numbers',[ProblemSolvingController::class,'getCountNumbers']);
 Route::get('get-index-of-string',[ProblemSolvingController::class,'getIndexOfString']);
+Route::get('get_min_steps_to_zero',[ProblemSolvingController::class,'getMinStepsToZero']);
 
 
 Route::prefix('auth')->group(function () {
@@ -30,10 +31,6 @@ Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
 });
 
-
-
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('getUserById/{id}',[UserController::class,'getUserById']);
-
     Route::apiResource('users', UserController::class, ['except'=> ['store']]);
 });

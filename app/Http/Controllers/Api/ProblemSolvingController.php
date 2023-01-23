@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\AlphaStringRequest;
 use App\Http\Requests\Api\CountNumbersRequest;
+use App\Http\Requests\Api\MinimumStepsRequest;
 
 class ProblemSolvingController extends Controller
 {
@@ -74,6 +75,52 @@ class ProblemSolvingController extends Controller
                 'status' => true,
                 'message' => 'Position of the input calculated successfully!',
                 'data' => ['position' => $position]
+            ], 200);
+        } catch (Throwable $e) {
+            return response()->json([
+                'message' => "Something wrong!",
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /** 
+     * @param MinimumStepsRequest $request
+     *
+     * @return JsonResponse
+     */
+    public function getMinStepsToZero(MinimumStepsRequest $request)
+    {
+        try {
+            $array = $request->q;
+            $size = $request->n;
+            if (count($array) != $size) {
+                return response()->json([
+                    'status' => false,
+                    'message' => "list of elements must be in size of $size!",
+                    'data' => []
+                ], 400);
+            }
+            $arrOfSteps = [];
+
+            for ($i = 0; $i < $size; $i++) {
+                $steps = 0;
+                $x = $array[$i];
+                while ($x > 0) {
+                    if ($x % 2 == 1) {
+                        $x--;
+                    } else {
+                        $x /= 2;
+                    }
+                    $steps++;
+                }
+                array_push($arrOfSteps, $steps);
+            }
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Min steps to zero calculated successfully!',
+                'data' => ['steps' => $arrOfSteps]
             ], 200);
         } catch (Throwable $e) {
             return response()->json([
